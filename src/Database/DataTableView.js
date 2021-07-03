@@ -4,6 +4,7 @@ import {SafeAreaView, Alert, View, ScrollView} from 'react-native';
 import {openDatabase} from 'react-native-sqlite-storage';
 import {DataTable, Button, Portal, Modal, Text} from 'react-native-paper';
 import promptUser from '../Utils/AsyncAlert';
+import FilterModal from '../Utils/FilterModal';
 
 // Connction to access the pre-populated user_db.db
 const db = openDatabase({name: 'app_database.db', createFromLocation: 1});
@@ -51,6 +52,7 @@ const RemarksModal = ({item, visible, hideModal, deleteItem}) => {
 const DataTableView = ({navigation}) => {
   const mounted = useRef(true);
   //Component State Variables
+  const referenceItems = useRef([]);
   const [flatListItems, setFlatListItems] = useState([]);
 
   //Variables for Pagination Start
@@ -63,22 +65,44 @@ const DataTableView = ({navigation}) => {
   let list = [];
   //State Variables for Pagination End
 
-  // Modal Variables Start
+  // Filter Moal Variables Start
+  const [startDate, setStartDate] = useState(
+    new Date(
+      new Date().getFullYear(),
+      new Date().getMonth() - 1,
+      new Date().getDate(),
+    ),
+  );
+  const [endDate, setEndDate] = useState(new Date());
+  const [dropdownValue, setDropdownValue] = useState(null);
+
+  const [filterVisible, setFilterVisible] = useState(false);
+  const showFilterModal = () => setFilterVisible(true);
+  const hideFilterModal = () => {
+    setFilterVisible(false);
+    filterData();
+  };
+  const [dropdownItems, setDropdownItems] = useState([
+    {label: 'Apple', value: 'apple'},
+    {label: 'Banana', value: 'banana'},
+  ]);
+  // Filter Moal Variables End
+
+  // Remarks Modal Variables Start
   const [visible, setVisible] = useState(false);
   const modalData = useRef({remarks: 'Placeholder'});
-
   const showModal = currentItem => {
     modalData.current = currentItem;
     setVisible(true);
   };
   const hideModal = () => setVisible(false);
-  // Modal Variables End
+  // Remarks Modal Variables End
 
   useEffect(() => {
     navigation.addListener('focus', () => {
       retrieveData();
     });
-  });
+  }, []);
 
   useEffect(() => {
     setPage(0);
@@ -91,6 +115,19 @@ const DataTableView = ({navigation}) => {
     };
   }, []);
 
+  // Remove duplicates from dropdown list items
+  const removeDuplicates = duplicates => {
+    const flag = {};
+    const unique = [];
+    duplicates.forEach(elem => {
+      if (!flag[elem.value]) {
+        flag[elem.value] = true;
+        unique.push(elem);
+      }
+    });
+    return unique;
+  };
+
   //Database Functions Start------------------------------------------------------------//
   const retrieveData = () => {
     db.transaction(tx => {
@@ -102,6 +139,14 @@ const DataTableView = ({navigation}) => {
         }
         if (mounted.current) {
           setFlatListItems(temp);
+          referenceItems.current = temp;
+          setDropdownItems(
+            removeDuplicates(
+              temp.map(item => {
+                return {label: item.kks, value: item.kks};
+              }),
+            ),
+          );
         }
       });
     });
@@ -154,8 +199,44 @@ const DataTableView = ({navigation}) => {
 
   const refreshTable = () => {
     retrieveData();
+    console.log(dropdownItems);
   };
   //Database Functions End------------------------------------------------------------//
+
+  // Date Filteration Functions Start
+  const filterData = () => {
+    try {
+      console.log('I ran');
+      if (dropdownValue.length !== 0) {
+        console.log(dropdownValue.length);
+        setFlatListItems(
+          referenceItems.current.filter(
+            item =>
+              new Date(item.date) >= startDate &&
+              new Date(item.date) <= endDate &&
+              dropdownValue.includes(item.kks),
+          ),
+        );
+      } else {
+        console.log('not filtered by kks')
+        setFlatListItems(
+          referenceItems.current.filter(
+            item =>
+              new Date(item.date) >= startDate &&
+              new Date(item.date) <= endDate,
+          ),
+        );
+      }
+    } catch {
+      console.log('I catch ran');
+      setFlatListItems(
+        referenceItems.current.filter(
+          item =>
+            new Date(item.date) >= startDate && new Date(item.date) <= endDate,
+        ),
+      );
+    }
+  };
 
   for (var i = from; i < to; i++) {
     list.push(flatListItems[i]);
@@ -165,9 +246,9 @@ const DataTableView = ({navigation}) => {
     <SafeAreaView>
       <DataTable style={{elevation: 2, width: '95%', alignSelf: 'center'}}>
         <DataTable.Header>
-          <DataTable.Title style={{flex: 3}}>KKS</DataTable.Title>
-          <DataTable.Title style={{flex: 5}}>DATE</DataTable.Title>
-          <DataTable.Title style={{flex: 2}} numeric>
+          <DataTable.Title style={{flex: 4}}>KKS</DataTable.Title>
+          <DataTable.Title style={{flex: 6}}>DATE</DataTable.Title>
+          <DataTable.Title style={{flex: 1.5}} numeric>
             VALUE
           </DataTable.Title>
         </DataTable.Header>
@@ -177,14 +258,26 @@ const DataTableView = ({navigation}) => {
               <DataTable.Row
                 key={item.date} // you need a unique key per item
                 onPress={() => showModal(item)}>
-                <DataTable.Cell style={{flex: 3}}>{item.kks}</DataTable.Cell>
-                <DataTable.Cell style={{flex: 5}}>{item.date}</DataTable.Cell>
-                <DataTable.Cell style={{flex: 2}} numeric>
+                <DataTable.Cell style={{flex: 4}}>{item.kks}</DataTable.Cell>
+                <DataTable.Cell style={{flex: 6}}>{item.date}</DataTable.Cell>
+                <DataTable.Cell style={{flex: 1.5}} numeric>
                   {item.value}
                 </DataTable.Cell>
               </DataTable.Row>
             );
           })}
+          <FilterModal
+            hideFilterModal={hideFilterModal}
+            filterVisible={filterVisible}
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            dropdownValue={dropdownValue}
+            setDropdownValue={setDropdownValue}
+            dropdownItems={dropdownItems}
+            setDropdownItems={setDropdownItems}
+          />
           <RemarksModal
             hideModal={hideModal}
             visible={visible}
@@ -205,6 +298,7 @@ const DataTableView = ({navigation}) => {
             onItemsPerPageChange={onItemsPerPageChange}
             selectPageDropdownLabel={'Rows per page'}
           />
+          <Button onPress={() => showFilterModal()}>Filter Data</Button>
           <Button onPress={() => clearTable()}>Clear Data</Button>
           <Button onPress={() => refreshTable()}>Refresh</Button>
         </ScrollView>

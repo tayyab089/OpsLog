@@ -4,7 +4,8 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
+// eslint-disable-next-line prettier/prettier
+import {DefaultTheme, Provider as PaperProvider, Text} from 'react-native-paper';
 import SplashScreen from './src/Views/SplashScreen';
 import AuthContext from './src/Utils/LoginContext';
 import CustomDrawerContent from './src/Utils/Drawer';
@@ -15,6 +16,11 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
+
+Text.defaultProps = {
+  ...(Text.defaultProps || {}),
+  allowFontScaling: true,
+};
 
 const theme = {
   ...DefaultTheme,
