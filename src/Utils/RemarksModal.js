@@ -18,12 +18,12 @@ const RemarksModal = ({item, visible, hideModal, deleteItem}) => {
         visible={visible}
         onDismiss={hideModal}
         contentContainerStyle={containerStyle}>
-        <Text style={textStyle}>Remarks: {item.remarks}</Text>
+        <Text style={textStyle}>USER: {item.username}</Text>
         <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
           <Button
             style={{marginRight: 10}}
             mode="contained"
-            onPress={deleteItem}>
+            onPress={() => deleteItem(item)}>
             Delete
           </Button>
           <Button mode="contained" onPress={hideModal}>

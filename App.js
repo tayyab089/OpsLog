@@ -8,11 +8,15 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import {DefaultTheme, Provider as PaperProvider, Text} from 'react-native-paper';
 import SplashScreen from './src/Views/SplashScreen';
 import AuthContext from './src/Utils/LoginContext';
+import UserContext from './src/Utils/UserContext';
 import CustomDrawerContent from './src/Utils/Drawer';
 import DataViewNavigator from './src/Screens/DataScreens';
 import MainNavigator from './src/Screens/MainScreens';
 import LoginNavigator from './src/Screens/LoginScreens';
+import AdminViewNavigator from './src/Screens/AdminScreen';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Alert} from 'react-native';
+import * as Keychain from 'react-native-keychain';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -71,17 +75,12 @@ const App = () => {
       let userToken;
 
       try {
-        // Restore token stored in `SecureStore` or any other encrypted storage
-        userToken = null;
+        const userData = await Keychain.getGenericPassword();
+        userToken = JSON.parse(userData.username);
       } catch (e) {
-        // Restoring token failed
         console.log('failed');
       }
-
       // After restoring token, we may need to validate it in production apps
-
-      // This will switch to the App screen or Auth screen and this loading
-      // screen will be unmounted and thrown away.
       dispatch({type: 'RESTORE_TOKEN', token: userToken});
     };
 
@@ -92,69 +91,122 @@ const App = () => {
   const authContext = React.useMemo(
     () => ({
       signIn: async data => {
-        // In a production app, we need to send some data (usually username, password) to server and get a token
-        // We will also need to handle errors if sign in failed
-        // After getting token, we need to persist the token using `SecureStore` or any other encrypted storage
-        // In the example, we'll use a dummy token
-
-        dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
+        console.log(data);
+        const options = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        };
+        fetch('http://192.168.10.11:3000/login', options)
+          .then(resp => resp.json())
+          .then(response => {
+            if (response.username === data.id) {
+              Keychain.setGenericPassword(
+                JSON.stringify(response),
+                JSON.stringify(response.token),
+              ).then((resp, err) => {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log(response);
+                  //dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
+                  dispatch({type: 'SIGN_IN', token: response});
+                }
+              });
+            } else {
+              Alert.alert(response.toString());
+            }
+          })
+          .catch(err => console.log(err));
       },
-      signOut: () => dispatch({type: 'SIGN_OUT'}),
+      signOut: async () => {
+        await Keychain.resetGenericPassword();
+        dispatch({type: 'SIGN_OUT'});
+      },
       signUp: async data => {
-        // In a production app, we need to send user data to server and get a token
-        // We will also need to handle errors if sign up failed
-        // After getting token, we need to persist the token using `SecureStore` or any other encrypted storage
-        // In the example, we'll use a dummy token
-
-        dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
+        const options = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        };
+        fetch('http://192.168.10.11:3000/register', options)
+          .then(resp => resp.json())
+          .then(response => {
+            Alert.alert(response);
+            console.log(response);
+          })
+          .catch(err => console.log(err));
       },
+      userToken: state.userToken,
     }),
     [],
   );
+
+  const userContext = {userToken: state.userToken};
+
   return (
     <AuthContext.Provider value={authContext}>
-      <PaperProvider theme={theme}>
-        <NavigationContainer>
-          {state.isLoading ? (
-            // We haven't finished checking for the token yet
-            <Stack.Navigator>
-              <Stack.Screen name="Splash" component={SplashScreen} />
-            </Stack.Navigator>
-          ) : state.userToken == null ? (
-            <LoginNavigator state={state} />
-          ) : (
-            <Drawer.Navigator
-              drawerContent={props => <CustomDrawerContent {...props} />}>
-              <Drawer.Screen
-                name="Main"
-                component={MainNavigator}
-                options={{
-                  drawerIcon: ({focused, size}) => (
-                    <Icon
-                      name="home"
-                      size={size}
-                      color={focused ? '#7cc' : '#ccc'}
-                    />
-                  ),
-                }}
-              />
-              <Drawer.Screen
-                name="Data"
-                component={DataViewNavigator}
-                options={{
-                  drawerIcon: ({focused, size}) => (
-                    <Icon
-                      name="database"
-                      size={size}
-                      color={focused ? '#7cc' : '#ccc'}
-                    />
-                  ),
-                }}
-              />
-            </Drawer.Navigator>
-          )}
-        </NavigationContainer>
-      </PaperProvider>
+      <UserContext.Provider value={userContext}>
+        <PaperProvider theme={theme}>
+          <NavigationContainer>
+            {state.isLoading ? (
+              // We haven't finished checking for the token yet
+              <Stack.Navigator>
+                <Stack.Screen name="Splash" component={SplashScreen} />
+              </Stack.Navigator>
+            ) : state.userToken == null ? (
+              <LoginNavigator state={state} />
+            ) : (
+              <Drawer.Navigator
+                drawerContent={props => <CustomDrawerContent {...props} />}>
+                <Drawer.Screen
+                  name="Main"
+                  component={MainNavigator}
+                  options={{
+                    drawerIcon: ({focused, size}) => (
+                      <Icon
+                        name="home"
+                        size={size}
+                        color={focused ? '#7cc' : '#ccc'}
+                      />
+                    ),
+                  }}
+                />
+                <Drawer.Screen
+                  name="Data"
+                  component={DataViewNavigator}
+                  options={{
+                    drawerIcon: ({focused, size}) => (
+                      <Icon
+                        name="database"
+                        size={size}
+                        color={focused ? '#7cc' : '#ccc'}
+                      />
+                    ),
+                  }}
+                />
+                <Drawer.Screen
+                  name="Admin"
+                  component={AdminViewNavigator}
+                  options={{
+                    drawerIcon: ({focused, size}) => (
+                      <Icon
+                        name="account-settings"
+                        size={size}
+                        color={focused ? '#7cc' : '#ccc'}
+                      />
+                    ),
+                  }}
+                />
+              </Drawer.Navigator>
+            )}
+          </NavigationContainer>
+        </PaperProvider>
+      </UserContext.Provider>
     </AuthContext.Provider>
   );
 };

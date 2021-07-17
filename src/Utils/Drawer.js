@@ -1,17 +1,20 @@
 import React, {useContext} from 'react';
 import {StyleSheet, View, Dimensions, Image} from 'react-native';
+import {Text} from 'react-native-paper';
 import {
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import AuthContext from '../Utils/LoginContext';
+import AuthContext from './LoginContext';
+import UserContext from './UserContext';
 
 const windowHeight = Dimensions.get('window').height;
 
 function CustomDrawerContent(props) {
   const {signOut} = useContext(AuthContext);
+  const {userToken} = useContext(UserContext);
   return (
     <DrawerContentScrollView {...props}>
       <View style={styles.upperHalf}>
@@ -19,6 +22,7 @@ function CustomDrawerContent(props) {
           style={styles.logo}
           source={require('../assets/Logos/OpsLog_Logo_nbc.png')}
         />
+        <Text style={styles.id}>{userToken.username}</Text>
       </View>
       <DrawerItemList {...props} />
       <DrawerItem
@@ -46,5 +50,11 @@ const styles = StyleSheet.create({
     height: 150,
     alignSelf: 'center',
   },
+  id: {
+    textAlign: 'center',
+    color: '#fff',
+    fontSize: 18,
+    margin: 10,
+  }
 });
 export default CustomDrawerContent;

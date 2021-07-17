@@ -218,7 +218,7 @@ const DataTableView = ({navigation}) => {
           ),
         );
       } else {
-        console.log('not filtered by kks')
+        console.log('not filtered by kks');
         setFlatListItems(
           referenceItems.current.filter(
             item =>
