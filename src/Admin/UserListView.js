@@ -44,7 +44,7 @@ const UserListView = ({navigation}) => {
           },
           body: JSON.stringify(item),
         };
-        fetch('http://192.168.10.11:3000/users', options)
+        fetch('https://hidden-stream-06963.herokuapp.com/users', options)
           .then(resp => resp.json())
           .then(response => {
             Alert.alert(response);
@@ -68,7 +68,7 @@ const UserListView = ({navigation}) => {
       },
       // body: JSON.stringify(data),
     };
-    fetch('http://192.168.10.11:3000/users', options)
+    fetch('https://hidden-stream-06963.herokuapp.com/users', options)
       .then(resp => resp.json())
       .then(response => {
         console.log(response);

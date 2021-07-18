@@ -99,7 +99,7 @@ const App = () => {
           },
           body: JSON.stringify(data),
         };
-        fetch('http://192.168.10.11:3000/login', options)
+        fetch('https://hidden-stream-06963.herokuapp.com/login', options)
           .then(resp => resp.json())
           .then(response => {
             if (response.username === data.id) {
@@ -133,7 +133,7 @@ const App = () => {
           },
           body: JSON.stringify(data),
         };
-        fetch('http://192.168.10.11:3000/register', options)
+        fetch('https://hidden-stream-06963.herokuapp.com/register', options)
           .then(resp => resp.json())
           .then(response => {
             Alert.alert(response);
@@ -156,7 +156,13 @@ const App = () => {
             {state.isLoading ? (
               // We haven't finished checking for the token yet
               <Stack.Navigator>
-                <Stack.Screen name="Splash" component={SplashScreen} />
+                <Stack.Screen
+                  name="Splash"
+                  component={SplashScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
               </Stack.Navigator>
             ) : state.userToken == null ? (
               <LoginNavigator state={state} />
