@@ -3,6 +3,7 @@ import React, {useState, useContext} from 'react';
 import {View, StatusBar, StyleSheet, Image} from 'react-native';
 import {TextInput, Button, Switch, Text} from 'react-native-paper';
 import AuthContext from '../Utils/LoginContext';
+import LoadingModal from '../Utils/LoadingModal';
 
 const SignUpView = ({navigation}) => {
   const [id, setId] = useState('');
@@ -11,8 +12,16 @@ const SignUpView = ({navigation}) => {
 
   const {signUp} = useContext(AuthContext);
 
+  // Loading Modal Variable Start
+  const [loadingVisible, setLoadingVisible] = useState(false);
+  const showLoadingModal = () => setLoadingVisible(true);
+  const hideLoadingModal = () => setLoadingVisible(false);
+  // Loading Modal Variable End
+
   const handleSignUp = data => {
+    showLoadingModal();
     signUp(data);
+    hideLoadingModal();
     setId('');
     setPassword('');
     setIsAdmin(false);
@@ -48,6 +57,7 @@ const SignUpView = ({navigation}) => {
         <Text style={styles.adminSwitchText}>Is Admin</Text>
         <Switch value={isAdmin} onValueChange={setIsAdmin} />
       </View>
+      <LoadingModal visible={loadingVisible} hideModal={hideLoadingModal} />
       <Button
         style={styles.loginButton}
         labelStyle={styles.loginButtonContent}

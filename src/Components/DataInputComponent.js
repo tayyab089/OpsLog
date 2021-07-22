@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Dimensions, Text, StyleSheet, View} from 'react-native';
-import {TextInput, HelperText} from 'react-native-paper';
+import {TextInput, HelperText, Checkbox} from 'react-native-paper';
 
 const DataInputComponent = ({
   description,
@@ -12,6 +12,8 @@ const DataInputComponent = ({
   max,
   remarks,
   setRemarks,
+  checked,
+  setChecked,
 }) => {
   const [windowDimensions, setWindowDimensions] = useState({
     width: Dimensions.get('window').width,
@@ -31,6 +33,7 @@ const DataInputComponent = ({
         <Text style={styles.inputText}>{description}</Text>
         <TextInput
           autoFocus={true}
+          disabled={checked}
           mode="outlined"
           keyboardType="numeric"
           style={styles.input}
@@ -60,6 +63,15 @@ const DataInputComponent = ({
         onChangeText={remarks => setRemarks(remarks)}
         value={remarks}
       />
+      <View style={styles.checkbox}>
+        <Checkbox
+          status={checked ? 'checked' : 'unchecked'}
+          onPress={() => {
+            setChecked(!checked);
+          }}
+        />
+        <Text> Equipment is not in service, either standby or in outage</Text>
+      </View>
     </View>
   );
 };
@@ -82,11 +94,17 @@ const styles = StyleSheet.create({
     padding: 3,
   },
   input: {},
-  remarks: {marginTop: 30},
+  remarks: {marginTop: 10},
   unitText: {
     top: -60,
     fontSize: 20,
     color: '#18A558',
+  },
+  checkbox: {
+    marginTop: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
   },
 });
 

@@ -48,7 +48,7 @@ const AdminMainView = ({navigation}) => {
               <StatusBar barStyle="light-content" backgroundColor="#18A558" />
               <TouchableOpacity
                 style={styles.block}
-                onPress={() => navigation.navigate('UserList')}>
+                onPress={() => navigation.navigate('KKSAdd')}>
                 <Icon name="plus-outline" size={40} color="#414a4c" />
                 <Text style={styles.text}> KKS Addition</Text>
               </TouchableOpacity>

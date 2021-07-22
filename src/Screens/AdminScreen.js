@@ -3,6 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import AdminMainView from '../Admin/AdminMainView';
 import UserList from '../Admin/UserListView';
 import SignUpView from '../Admin/SignUpView';
+import KKSAdditionView from '../Admin/KKSAdditionView';
 import {Button} from 'react-native-paper';
 import TransformRotate from '../Utils/Transitions/TransfomRotate';
 
@@ -57,6 +58,21 @@ const AdminViewNavigator = () => {
         component={SignUpView}
         options={({navigation}) => ({
           title: 'Add User',
+          headerLeft: () => (
+            <Button
+              onPress={() => navigation.toggleDrawer()}
+              mode="text"
+              color="#fff"
+              icon="reorder-horizontal"
+            />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="KKSAdd"
+        component={KKSAdditionView}
+        options={({navigation}) => ({
+          title: 'Add KKS',
           headerLeft: () => (
             <Button
               onPress={() => navigation.toggleDrawer()}

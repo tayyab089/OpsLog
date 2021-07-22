@@ -23,6 +23,7 @@ const DataInputView = ({route, navigation}) => {
     min: 0,
     max: 1000,
   });
+  const [checked, setChecked] = useState(false);
   const [text, setText] = useState('');
   const [remarks, setRemarks] = useState('');
   const kksMatch = useRef(true);
@@ -115,7 +116,7 @@ const DataInputView = ({route, navigation}) => {
   const dataStorage = () => {
     let currentdate = new Date();
     // Saving to Database
-    if (text === '') {
+    if (text === '' && !checked) {
       Alert.alert('Please Enter Value');
       return;
     } else if (
@@ -200,6 +201,8 @@ const DataInputView = ({route, navigation}) => {
               remarks={remarks}
               setRemarks={setRemarks}
               hasErrors={hasErrors}
+              checked={checked}
+              setChecked={setChecked}
             />
             <TrendModal
               hideModal={hideModal}

@@ -5,6 +5,7 @@ import {openDatabase} from 'react-native-sqlite-storage';
 import {DataTable, Button, Portal, Modal, Text} from 'react-native-paper';
 import promptUser from '../Utils/AsyncAlert';
 import FilterModal from '../Utils/FilterModal';
+import LoadingModal from '../Utils/LoadingModal';
 
 // Connction to access the pre-populated user_db.db
 const db = openDatabase({name: 'app_database.db', createFromLocation: 1});
@@ -48,7 +49,7 @@ const RemarksModal = ({item, visible, hideModal, deleteItem}) => {
   );
 };
 
-// Actual View Start from Here
+// Actual View Start from Here========================================================================
 const DataTableView = ({navigation}) => {
   const mounted = useRef(true);
   //Component State Variables
@@ -64,6 +65,12 @@ const DataTableView = ({navigation}) => {
   const to = Math.min((page + 1) * numberOfItemsPerPage, flatListItems.length);
   let list = [];
   //State Variables for Pagination End
+
+  // Loading Modal Variable Start
+  const [loadingVisible, setLoadingVisible] = useState(false);
+  const showLoadingModal = () => setLoadingVisible(true);
+  const hideLoadingModal = () => setLoadingVisible(false);
+  // Loading Modal Variable End
 
   // Filter Moal Variables Start
   const [startDate, setStartDate] = useState(
@@ -203,6 +210,30 @@ const DataTableView = ({navigation}) => {
   };
   //Database Functions End------------------------------------------------------------//
 
+  // POST DATA TO SERVER FUNCTION START
+  const postData = () => {
+    showLoadingModal();
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(flatListItems),
+    };
+    fetch('https://dataloggingapp.herokuapp.com/post_data', options)
+      .then(resp => resp.json())
+      .then(response => {
+        Alert.alert(response);
+        console.log(response);
+        hideLoadingModal();
+      })
+      .catch(err => {
+        console.log(err);
+        hideLoadingModal();
+      });
+  };
+  // POST DATA TO SERVER FUNCTION END
+
   // Date Filteration Functions Start
   const filterData = () => {
     try {
@@ -284,6 +315,7 @@ const DataTableView = ({navigation}) => {
             item={modalData.current}
             deleteItem={deleteItem}
           />
+          <LoadingModal visible={loadingVisible} hideModal={hideLoadingModal} />
           <DataTable.Pagination
             page={page}
             numberOfPages={Math.ceil(
@@ -300,6 +332,7 @@ const DataTableView = ({navigation}) => {
           />
           <Button onPress={() => showFilterModal()}>Filter Data</Button>
           <Button onPress={() => clearTable()}>Clear Data</Button>
+          <Button onPress={() => postData()}>Send Data</Button>
           <Button onPress={() => refreshTable()}>Refresh</Button>
         </ScrollView>
       </DataTable>

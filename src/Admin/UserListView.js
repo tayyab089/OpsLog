@@ -4,6 +4,7 @@ import {SafeAreaView, Alert, ScrollView} from 'react-native';
 import {DataTable, Button} from 'react-native-paper';
 import RemarksModal from '../Utils/RemarksModal';
 import promptUser from '../Utils/AsyncAlert';
+import LoadingModal from '../Utils/LoadingModal';
 
 const numberOfItemsPerPageList = [5, 8, 10]; // Items per page for the pagination
 
@@ -21,6 +22,12 @@ const UserListView = ({navigation}) => {
   const to = Math.min((page + 1) * numberOfItemsPerPage, userList.length);
   let list = [];
   //State Variables for Pagination End
+
+  // Loading Modal Variable Start
+  const [loadingVisible, setLoadingVisible] = useState(false);
+  const showLoadingModal = () => setLoadingVisible(true);
+  const hideLoadingModal = () => setLoadingVisible(false);
+  // Loading Modal Variable End
 
   // Remarks Modal Variables Start
   const [visible, setVisible] = useState(false);
@@ -68,13 +75,17 @@ const UserListView = ({navigation}) => {
       },
       // body: JSON.stringify(data),
     };
+    showLoadingModal();
     fetch('https://hidden-stream-06963.herokuapp.com/users', options)
       .then(resp => resp.json())
       .then(response => {
-        console.log(response);
         setUserList(response);
+        hideLoadingModal();
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        hideLoadingModal();
+      });
   };
 
   //Fetch User Data
@@ -123,6 +134,7 @@ const UserListView = ({navigation}) => {
             item={modalData.current}
             deleteItem={deleteUser}
           />
+          <LoadingModal visible={loadingVisible} hideModal={hideLoadingModal} />
           <DataTable.Pagination
             page={page}
             numberOfPages={Math.ceil(userList.length / numberOfItemsPerPage)}
