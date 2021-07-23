@@ -5,12 +5,25 @@ import {TextInput, Button} from 'react-native-paper';
 // eslint-disable-next-line no-unused-vars
 import userData from '../Data/UserData';
 import AuthContext from '../Utils/LoginContext';
+import LoadingModal from '../Utils/LoadingModal';
 
 const LoginView = ({navigation}) => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
 
+  // Loading Modal Variable Start
+  const [loadingVisible, setLoadingVisible] = useState(false);
+  const showLoadingModal = () => setLoadingVisible(true);
+  const hideLoadingModal = () => setLoadingVisible(false);
+  // Loading Modal Variable End
+
   const {signIn} = useContext(AuthContext);
+
+  const handleSignIn = data => {
+    showLoadingModal();
+    signIn(data);
+    hideLoadingModal();
+  };
 
   return (
     <View style={styles.container}>
@@ -38,12 +51,13 @@ const LoginView = ({navigation}) => {
         onChangeText={password => setPassword(password)}
         value={password}
       />
+      <LoadingModal visible={loadingVisible} hideModal={hideLoadingModal} />
       <Button
         style={styles.loginButton}
         labelStyle={styles.loginButtonContent}
         dark={false}
         mode="contained"
-        onPress={() => signIn({id, password})}>
+        onPress={() => handleSignIn({id, password})}>
         Login
       </Button>
       <View>

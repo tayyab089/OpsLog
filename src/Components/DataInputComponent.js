@@ -10,6 +10,7 @@ const DataInputComponent = ({
   hasErrors,
   min,
   max,
+  unit,
   remarks,
   setRemarks,
   checked,
@@ -43,10 +44,10 @@ const DataInputComponent = ({
           value={text}
         />
         <HelperText type="error" visible={hasErrors()}>
-          Value is too High, Please check to see for any problem
+          Value is abnormal, Please check to see for any problem
         </HelperText>
-        <Text style={{...styles.unitText, left: windowDimensions.width - 50}}>
-          C
+        <Text style={{...styles.unitText, left: windowDimensions.width - 65}}>
+          {unit}
         </Text>
       </View>
       <View style={styles.minMaxContainer}>

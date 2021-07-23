@@ -16,7 +16,7 @@ const numberOfItemsPerPageList = [5, 8, 10]; // Items per page for the paginatio
 const RemarksModal = ({item, visible, hideModal, deleteItem}) => {
   // eslint-disable-next-line prettier/prettier
   const containerStyle = {backgroundColor: 'white', padding: 20, margin: 20, borderRadius: 10};
-  const textStyle = {marginBottom: 50, marginTop: 20};
+  const textStyle = {marginBottom: 0, marginTop: 0};
 
   if (item.remarks === '' || item.remarks === null) {
     item.remarks = 'All Okay :)';
@@ -28,8 +28,11 @@ const RemarksModal = ({item, visible, hideModal, deleteItem}) => {
         visible={visible}
         onDismiss={hideModal}
         contentContainerStyle={containerStyle}>
-        <Text style={textStyle}>Remarks: {item.remarks}</Text>
-        <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+        <Text style={textStyle}><Text style={{fontWeight: 'bold'}}>KKS:            </Text>{item.kks}</Text>
+        <Text style={textStyle}><Text style={{fontWeight: 'bold'}}>DATE:          </Text>{item.date.slice(0,-5)}</Text>
+        <Text style={textStyle}><Text style={{fontWeight: 'bold'}}>VALUE:       </Text> {item.value}</Text>
+        <Text style={textStyle}><Text style={{fontWeight: 'bold'}}>REMARKS: </Text> {item.remarks}</Text>
+        <View style={{flexDirection: 'row', justifyContent: 'flex-end', marginTop: 50}}>
           <Button
             style={{marginRight: 10}}
             mode="contained"
@@ -96,8 +99,8 @@ const DataTableView = ({navigation}) => {
   // Filter Moal Variables End
 
   // Remarks Modal Variables Start
-  const [visible, setVisible] = useState(false);
-  const modalData = useRef({remarks: 'Placeholder'});
+  const [visible, setVisible] = useState(true);
+  const modalData = useRef({remarks: 'Placeholder', date: 'Placeholder', value: 'Placeholder', kks: 'Placeholder'});
   const showModal = currentItem => {
     modalData.current = currentItem;
     setVisible(true);
@@ -278,7 +281,8 @@ const DataTableView = ({navigation}) => {
       <DataTable style={{elevation: 2, width: '95%', alignSelf: 'center'}}>
         <DataTable.Header>
           <DataTable.Title style={{flex: 4}}>KKS</DataTable.Title>
-          <DataTable.Title style={{flex: 6}}>DATE</DataTable.Title>
+          <DataTable.Title style={{flex: 4}}>DATE</DataTable.Title>
+          <DataTable.Title style={{flex: 2}}>IN-ACTIVE</DataTable.Title>
           <DataTable.Title style={{flex: 1.5}} numeric>
             VALUE
           </DataTable.Title>
@@ -290,7 +294,10 @@ const DataTableView = ({navigation}) => {
                 key={item.date} // you need a unique key per item
                 onPress={() => showModal(item)}>
                 <DataTable.Cell style={{flex: 4}}>{item.kks}</DataTable.Cell>
-                <DataTable.Cell style={{flex: 6}}>{item.date}</DataTable.Cell>
+                <DataTable.Cell style={{flex: 4}}>{item.date}</DataTable.Cell>
+                <DataTable.Cell style={{flex: 2}}>
+                  {item.inactive}
+                </DataTable.Cell>
                 <DataTable.Cell style={{flex: 1.5}} numeric>
                   {item.value}
                 </DataTable.Cell>

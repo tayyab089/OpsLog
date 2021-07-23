@@ -1,9 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {Alert, ScrollView, StyleSheet, View} from 'react-native';
+import {Alert, Dimensions, ScrollView, StyleSheet, View} from 'react-native';
 import {Surface, Text, TextInput, Title, Button} from 'react-native-paper';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {sectionList} from '../Data/SectionListData';
+
+const wHeight = Dimensions.get('window').height;
 
 const KKSAdditionView = () => {
   const [KKS, setKKS] = useState('');
@@ -16,7 +18,8 @@ const KKSAdditionView = () => {
   const [dropdownValueArea, setDropdownValueArea] = useState(null);
   const [dropdownItemsArea, setDropdownItemsArea] = useState([
     ...sectionList.BoilerSectionList,
-    sectionList.BOPSectionList,
+    ...sectionList.BOPSectionList,
+    ...sectionList.TurbineSectionList,
   ]);
   //Dropdown Selector for Category
   const [openCategory, setOpenCategory] = useState(false);
@@ -40,99 +43,103 @@ const KKSAdditionView = () => {
     <View style={styles.container}>
       <Surface style={styles.surface}>
         <Title style={styles.heading}>Please Provide Following Data:</Title>
-        <View style={styles.miniContainerInput}>
-          <Text style={styles.labelText}>KKS: </Text>
-          <TextInput
-            mode="outlined"
-            onChangeText={text => setKKS(text)}
-            value={KKS}
-            style={styles.textInput}
-          />
-        </View>
-        <View style={styles.miniContainerDropdown}>
-          <Text style={styles.labelText}>Area:</Text>
-          <View style={styles.textInput}>
-            <DropDownPicker
-              open={openArea}
-              value={dropdownValueArea}
-              items={dropdownItemsArea}
-              setOpen={setOpenArea}
-              setValue={setDropdownValueArea}
-              setItems={setDropdownItemsArea}
-              style={{...styles.picker, zIndex: 2000}}
-              textStyle={{fontSize: 18}}
-              //   containerStyle={styles.pickerContainer}
-              dropDownStyle={styles.pickerDropdown}
-              // eslint-disable-next-line prettier/prettier
-              dropDownContainerStyle={{...styles.pickerDropdownContainer, zIndex: 2000}}
+        <ScrollView>
+          <View style={styles.miniContainerInput}>
+            <Text style={styles.labelText}>KKS: </Text>
+            <TextInput
+              mode="outlined"
+              onChangeText={text => setKKS(text)}
+              value={KKS}
+              style={styles.textInput}
             />
           </View>
-        </View>
-        <View style={styles.miniContainerDropdown}>
-          <Text style={styles.labelText}>Category:</Text>
-          <View style={styles.textInput}>
-            <DropDownPicker
-              open={openCategory}
-              value={dropdownValueCategory}
-              items={dropdownItemsCategory}
-              setOpen={setOpenCategory}
-              setValue={setDropdownValueCategory}
-              setItems={setDropdownItemsCategory}
-              style={{...styles.picker, zIndex: 500}}
-              textStyle={{fontSize: 18}}
-              //   containerStyle={styles.pickerContainer}
-              dropDownStyle={styles.pickerDropdown}
-              // eslint-disable-next-line prettier/prettier
+          <View style={styles.miniContainerDropdown}>
+            <Text style={styles.labelText}>Area:</Text>
+            <View style={styles.textInput}>
+              <DropDownPicker
+                open={openArea}
+                value={dropdownValueArea}
+                items={dropdownItemsArea}
+                setOpen={setOpenArea}
+                setValue={setDropdownValueArea}
+                setItems={setDropdownItemsArea}
+                style={{...styles.picker, zIndex: 2000}}
+                textStyle={{fontSize: 18}}
+                //   containerStyle={styles.pickerContainer}
+                dropDownStyle={styles.pickerDropdown}
+                // eslint-disable-next-line prettier/prettier
+              dropDownContainerStyle={{...styles.pickerDropdownContainer, zIndex: 2000}}
+              />
+            </View>
+          </View>
+          <View style={styles.miniContainerDropdown}>
+            <Text style={styles.labelText}>Category:</Text>
+            <View style={styles.textInput}>
+              <DropDownPicker
+                open={openCategory}
+                value={dropdownValueCategory}
+                items={dropdownItemsCategory}
+                setOpen={setOpenCategory}
+                setValue={setDropdownValueCategory}
+                setItems={setDropdownItemsCategory}
+                style={{...styles.picker, zIndex: 500}}
+                textStyle={{fontSize: 18}}
+                //   containerStyle={styles.pickerContainer}
+                dropDownStyle={styles.pickerDropdown}
+                // eslint-disable-next-line prettier/prettier
               dropDownContainerStyle={{...styles.pickerDropdownContainer, zIndex: 500}}
+              />
+            </View>
+          </View>
+          <View style={styles.miniContainerInput}>
+            <Text style={styles.labelText}>Description: </Text>
+            <TextInput
+              mode="outlined"
+              onChangeText={text => setDescription(text)}
+              value={description}
+              style={styles.multilineTextInput}
+              multiline={true}
+              numberOfLines={2}
             />
           </View>
-        </View>
-        <View style={styles.miniContainerInput}>
-          <Text style={styles.labelText}>Description: </Text>
-          <TextInput
-            mode="outlined"
-            onChangeText={text => setDescription(text)}
-            value={description}
-            style={styles.textInput}
-          />
-        </View>
-        <View style={styles.miniContainerDropdown}>
-          <Text style={styles.labelText}>Type:</Text>
-          <View style={styles.textInput}>
-            <DropDownPicker
-              open={openType}
-              value={dropdownValueType}
-              items={dropdownItemsType}
-              setOpen={setOpenType}
-              setValue={setDropdownValueType}
-              setItems={setDropdownItemsType}
-              style={{...styles.picker, zIndex: 100}}
-              textStyle={{fontSize: 18}}
-              //   containerStyle={styles.pickerContainer}
-              dropDownStyle={styles.pickerDropdown}
-              // eslint-disable-next-line prettier/prettier
+          <View style={styles.miniContainerDropdown}>
+            <Text style={styles.labelText}>Type:</Text>
+            <View style={styles.textInput}>
+              <DropDownPicker
+                open={openType}
+                value={dropdownValueType}
+                items={dropdownItemsType}
+                setOpen={setOpenType}
+                setValue={setDropdownValueType}
+                setItems={setDropdownItemsType}
+                style={{...styles.picker, zIndex: 100}}
+                textStyle={{fontSize: 18}}
+                //   containerStyle={styles.pickerContainer}
+                dropDownStyle={styles.pickerDropdown}
+                // eslint-disable-next-line prettier/prettier
               dropDownContainerStyle={{...styles.pickerDropdownContainer, zIndex: 2000}}
+              />
+            </View>
+          </View>
+          <View style={styles.miniContainerInput}>
+            <Text style={styles.labelText}>Min: </Text>
+            <TextInput
+              mode="outlined"
+              keyboardType="numeric"
+              onChangeText={text => setMin(text)}
+              value={min}
+              style={{...styles.textInput, marginRight: 10}}
+            />
+            <Text style={styles.labelText}>Max: </Text>
+            <TextInput
+              mode="outlined"
+              keyboardType="numeric"
+              onChangeText={text => setMax(text)}
+              value={max}
+              style={styles.textInput}
             />
           </View>
-        </View>
-        <View style={styles.miniContainerInput}>
-          <Text style={styles.labelText}>Min: </Text>
-          <TextInput
-            mode="outlined"
-            keyboardType="numeric"
-            onChangeText={text => setMin(text)}
-            value={min}
-            style={{...styles.textInput, marginRight: 10}}
-          />
-          <Text style={styles.labelText}>Max: </Text>
-          <TextInput
-            mode="outlined"
-            keyboardType="numeric"
-            onChangeText={text => setMax(text)}
-            value={max}
-            style={styles.textInput}
-          />
-        </View>
+        </ScrollView>
         <Button
           mode="contained"
           style={styles.submitButton}
@@ -169,14 +176,17 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 3,
-    height: 50,
+    height: 40,
+  },
+  multilineTextInput: {
+    flex: 3,
   },
   labelText: {
     flex: 1.2,
     fontSize: 15,
   },
   picker: {
-    height: 50,
+    height: 40,
     borderRadius: 5,
     backgroundColor: '#F8F8F8',
     borderColor: '#808080',
@@ -194,9 +204,9 @@ const styles = StyleSheet.create({
   },
   submitButton: {
     position: 'absolute',
-    bottom: 10,
+    top: wHeight - 160,
     width: '100%',
-    left: 20,
+    left: 15,
     height: 50,
     justifyContent: 'center',
   },

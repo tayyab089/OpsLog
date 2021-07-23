@@ -23,7 +23,7 @@ const Drawer = createDrawerNavigator();
 
 Text.defaultProps = {
   ...(Text.defaultProps || {}),
-  allowFontScaling: true,
+  allowFontScaling: false,
 };
 
 const theme = {

@@ -22,6 +22,7 @@ const DataInputView = ({route, navigation}) => {
     serialNumber: '',
     min: 0,
     max: 1000,
+    unit: '',
   });
   const [checked, setChecked] = useState(false);
   const [text, setText] = useState('');
@@ -31,7 +32,8 @@ const DataInputView = ({route, navigation}) => {
   const [areaList, setAreaList] = useState();
   const isDataReady = useRef(true);
   const filteredData = useRef([]);
-  const startingdescription = useRef('');
+  const category = useRef('');
+  //const startingdescription = useRef('');
   const counter = useRef(1);
   const dataArrayLegth = useRef(0);
   const area = useRef('');
@@ -74,13 +76,14 @@ const DataInputView = ({route, navigation}) => {
   useEffect(() => {
     // Cleanup Fuction
     return function cleanup() {
-      mounted.current = false;
+      mounted.current = true;
     };
   }, []);
 
   breakme: if (isDataReady.current) {
     try {
       area.current = areaList.find(x => x.kks === route.params.kks).area;
+      console.log(area.current);
     } catch (err) {
       kksMatchCounter.current++;
       kksMatch.current = false;
@@ -89,28 +92,23 @@ const DataInputView = ({route, navigation}) => {
     kksMatch.current = true;
     isDataReady.current = false;
     filteredData.current = areaList.filter(item => item.area === area.current);
-    startingdescription.current = filteredData.current.find(
-      x => x.kks === route.params.kks,
-    ).description;
+    // startingdescription.current = filteredData.current.find(
+    //   x => x.kks === route.params.kks,
+    // ).description;
     dataArrayLegth.current = filteredData.current.length;
     descriptionIndex.current = filteredData.current.findIndex(
       x => x.kks === route.params.kks,
     );
-    console.log(mounted.current);
+    category.current = filteredData.current[descriptionIndex.current].category;
     if (mounted.current) {
-      setDataInputData({
-        description: startingdescription.current,
-        kks: route.params.kks,
-        min: 0,
-        max: 200,
-      });
+      setDataInputData(filteredData.current[descriptionIndex.current]);
     }
   } else {
     console.log('not empty');
   }
 
   const hasErrors = () => {
-    return text < dataInputData.min || text > dataInputData.max;
+    return text < dataInputData.min_value || text > dataInputData.max_value;
   };
 
   const dataStorage = () => {
@@ -120,7 +118,7 @@ const DataInputView = ({route, navigation}) => {
       Alert.alert('Please Enter Value');
       return;
     } else if (
-      (text < dataInputData.min || text > dataInputData.max) &&
+      (text < dataInputData.min_value || text > dataInputData.max_value) &&
       remarks === ''
     ) {
       Alert.alert(
@@ -130,8 +128,9 @@ const DataInputView = ({route, navigation}) => {
     }
     db.transaction(function (tx) {
       tx.executeSql(
-        'INSERT INTO data_input_table (kks, date, value, remarks) VALUES (?,?,?,?)',
-        [dataInputData.kks, currentdate.toString(), text, remarks],
+        'INSERT INTO data_input_table (kks, date, value, inactive, remarks) VALUES (?,?,?,?,?)',
+        // eslint-disable-next-line prettier/prettier
+        [dataInputData.kks, currentdate.toString(), text, checked.toString(), remarks],
         (_tx, results) => {
           console.log('I Ran');
           console.log('Results', results.rowsAffected);
@@ -145,9 +144,10 @@ const DataInputView = ({route, navigation}) => {
     });
     // Saving Finished
     ready.current = true; // Modal Data update===================================Start/End
-    if (mounted.current) {
+    if (filteredData.current[0].category) {
       setText('');
       setRemarks('');
+      setChecked(false);
     }
     counter.current++;
     descriptionIndex.current++;
@@ -157,9 +157,12 @@ const DataInputView = ({route, navigation}) => {
       dataArrayLegth.current === 1
     ) {
       let index = 0;
-      switch (area.current) {
-        case 'BTG':
+      switch (category.current) {
+        case 'B':
           index = 0;
+          break;
+        case 'TG':
+          index = 1;
           break;
         default:
           index = 2;
@@ -173,16 +176,11 @@ const DataInputView = ({route, navigation}) => {
       descriptionIndex.current = 0;
     }
 
-    const description =
-      filteredData.current[descriptionIndex.current].description;
-    const kks = filteredData.current[descriptionIndex.current].kks;
+    // const description =
+    //   filteredData.current[descriptionIndex.current].description;
+    // const kks = filteredData.current[descriptionIndex.current].kks;
     if (mounted.current) {
-      setDataInputData({
-        description: description,
-        kks: kks,
-        min: 0,
-        max: 200,
-      });
+      setDataInputData(filteredData.current[descriptionIndex.current]);
     }
   };
 
@@ -194,8 +192,9 @@ const DataInputView = ({route, navigation}) => {
             <DataInputComponent
               description={dataInputData.description}
               kks={dataInputData.kks}
-              min={dataInputData.min}
-              max={dataInputData.max}
+              min={dataInputData.min_value}
+              max={dataInputData.max_value}
+              unit={dataInputData.unit}
               text={text}
               setText={setText}
               remarks={remarks}

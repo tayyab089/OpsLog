@@ -9,7 +9,6 @@ import {
 } from 'react-native-chart-kit';
 import {
   ScrollView,
-  //   Text,
   Dimensions,
   StyleSheet,
   View,
@@ -24,11 +23,12 @@ const db = openDatabase({name: 'app_database.db', createFromLocation: 1});
 
 const margin = 13;
 
-const DataTrendView = ({navigation}) => {
+const DataTrendView = ({route, navigation}) => {
   const mounted = useRef(true);
   const [dataItems, setDataItems] = useState('');
   const labels = useRef([]);
   const dataset = useRef([]);
+  const [kksPlaceholder, setKKsPlaceholder] = useState('KKS');
 
   useEffect(() =>
     navigation.addListener('focus', () => {
@@ -41,11 +41,22 @@ const DataTrendView = ({navigation}) => {
           }
           if (mounted.current) {
             setDataItems(temp);
+            upDateTrendQR();
           }
         });
       });
     }),
   );
+
+  const upDateTrendQR = () => {
+    try {
+      console.log(route.params.kks);
+      upDateTrend(route.params.kks);
+      setKKsPlaceholder(route.params.kks);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   // Cleanup Fuction
   useEffect(() => {
@@ -122,7 +133,7 @@ const DataTrendView = ({navigation}) => {
         <Surface style={styles.input}>
           <TextInput
             style={styles.inputText}
-            placeholder="KKS"
+            placeholder={kksPlaceholder}
             placeholderTextColor="#18A558"
             // onChangeText={kks => setKks(kks)}
             onSubmitEditing={({nativeEvent}) => upDateTrend(nativeEvent.text)}
