@@ -60,6 +60,7 @@ const KKSAdditionView = () => {
               setValue={setDropdownValueArea}
               setItems={setDropdownItemsArea}
               style={{...styles.picker, zIndex: 2000}}
+              textStyle={{fontSize: 18}}
               //   containerStyle={styles.pickerContainer}
               dropDownStyle={styles.pickerDropdown}
               // eslint-disable-next-line prettier/prettier
@@ -78,6 +79,7 @@ const KKSAdditionView = () => {
               setValue={setDropdownValueCategory}
               setItems={setDropdownItemsCategory}
               style={{...styles.picker, zIndex: 500}}
+              textStyle={{fontSize: 18}}
               //   containerStyle={styles.pickerContainer}
               dropDownStyle={styles.pickerDropdown}
               // eslint-disable-next-line prettier/prettier
@@ -105,6 +107,7 @@ const KKSAdditionView = () => {
               setValue={setDropdownValueType}
               setItems={setDropdownItemsType}
               style={{...styles.picker, zIndex: 100}}
+              textStyle={{fontSize: 18}}
               //   containerStyle={styles.pickerContainer}
               dropDownStyle={styles.pickerDropdown}
               // eslint-disable-next-line prettier/prettier
@@ -146,7 +149,8 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   surface: {
-    padding: 20,
+    padding: 15,
+    height: '100%',
   },
   heading: {
     marginBottom: 20,
@@ -164,12 +168,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   textInput: {
-    flex: 2,
+    flex: 3,
     height: 50,
   },
   labelText: {
-    flex: 1,
-    fontSize: 16,
+    flex: 1.2,
+    fontSize: 15,
   },
   picker: {
     height: 50,
@@ -189,7 +193,12 @@ const styles = StyleSheet.create({
     borderColor: '#808080',
   },
   submitButton: {
-    marginTop: 20,
+    position: 'absolute',
+    bottom: 10,
+    width: '100%',
+    left: 20,
+    height: 50,
+    justifyContent: 'center',
   },
 });
 export default KKSAdditionView;

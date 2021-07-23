@@ -56,9 +56,9 @@ const AdminMainView = ({navigation}) => {
             <Surface style={styles.surface}>
               <TouchableOpacity
                 style={styles.block}
-                onPress={() => navigation.navigate('SignUp')}>
+                onPress={() => navigation.navigate('Reports')}>
                 <Icon name="artstation" size={35} color="#414a4c" />
-                <Text style={styles.text}> Stats</Text>
+                <Text style={styles.text}> Reports</Text>
               </TouchableOpacity>
             </Surface>
           </View>
