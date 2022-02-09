@@ -1,11 +1,12 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import {FlatList, TouchableOpacity, SafeAreaView, StatusBar} from 'react-native';
+import { withTheme } from 'react-native-paper';
 import Cardview from '../Components/Cardview';
 import mainMenu from '../Data/HomepageData';
 
 
-const HomePage = ({navigation}) => {
+const HomePage = ({navigation, theme}) => {
 
     const renderItem = ({ item }) => (
         <TouchableOpacity
@@ -17,7 +18,7 @@ const HomePage = ({navigation}) => {
       );
     return (
         <SafeAreaView>
-            <StatusBar barStyle="light-content" backgroundColor="#18A558" />
+            <StatusBar barStyle="light-content" backgroundColor={theme.colors.primary} />
             <FlatList
                 data={mainMenu}
                 renderItem={renderItem}
@@ -28,4 +29,4 @@ const HomePage = ({navigation}) => {
     );
 };
 
-export default HomePage;
+export default withTheme(HomePage);

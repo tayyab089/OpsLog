@@ -1,10 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  FlatList,
-  SafeAreaView,
-  StatusBar,
-  TouchableOpacity,
-} from 'react-native';
+import {FlatList, SafeAreaView, TouchableOpacity} from 'react-native';
 import AreaListComponent from '../Components/AreaListComponent';
 // import areaList from '../Data/FilteredData.json';
 import {openDatabase, closeDatabase} from 'react-native-sqlite-storage';
@@ -38,7 +33,6 @@ const AreaListView = ({route, navigation}) => {
   );
   return (
     <SafeAreaView>
-      <StatusBar barStyle="light-content" backgroundColor="#18A558" />
       <FlatList
         data={areaData}
         renderItem={renderItem}

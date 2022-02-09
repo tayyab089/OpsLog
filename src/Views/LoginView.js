@@ -1,13 +1,13 @@
 /* eslint-disable no-shadow */
 import React, {useState, useContext} from 'react';
 import {View, StatusBar, StyleSheet, Image} from 'react-native';
-import {TextInput, Button} from 'react-native-paper';
+import {TextInput, Button, withTheme} from 'react-native-paper';
 // eslint-disable-next-line no-unused-vars
 import userData from '../Data/UserData';
 import AuthContext from '../Utils/LoginContext';
 import LoadingModal from '../Utils/LoadingModal';
 
-const LoginView = ({navigation}) => {
+const LoginView = ({navigation, theme}) => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
 
@@ -21,13 +21,14 @@ const LoginView = ({navigation}) => {
 
   const handleSignIn = data => {
     showLoadingModal();
-    signIn(data);
-    hideLoadingModal();
+    signIn(data, hideLoadingModal);
   };
 
+  const {colors} = theme;
+
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#18A558" />
+    <View style={{...styles.container, backgroundColor: colors.primary}}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
       <View>
         <Image
           style={styles.image}
@@ -35,7 +36,7 @@ const LoginView = ({navigation}) => {
         />
       </View>
       <TextInput
-        style={styles.inputs}
+        style={{...styles.inputs, backgroundColor: colors.primary}}
         theme={{colors: {primary: 'white', placeholder: '#fff', text: '#fff'}}}
         mode="flat"
         label="ID"
@@ -43,7 +44,7 @@ const LoginView = ({navigation}) => {
         value={id}
       />
       <TextInput
-        style={styles.inputs}
+        style={{...styles.inputs, backgroundColor: colors.primary}}
         mode="flat"
         label="Password"
         theme={{colors: {primary: 'white', placeholder: '#fff', text: '#fff'}}}
@@ -54,7 +55,7 @@ const LoginView = ({navigation}) => {
       <LoadingModal visible={loadingVisible} hideModal={hideLoadingModal} />
       <Button
         style={styles.loginButton}
-        labelStyle={styles.loginButtonContent}
+        labelStyle={{color: colors.primary}}
         dark={false}
         mode="contained"
         onPress={() => handleSignIn({id, password})}>
@@ -98,4 +99,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginView;
+export default withTheme(LoginView);

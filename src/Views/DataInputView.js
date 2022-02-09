@@ -1,6 +1,6 @@
 /* eslint-disable no-labels */
 import React, {useRef, useState, useEffect, Fragment} from 'react';
-import {SafeAreaView, StyleSheet, View, Text, Alert} from 'react-native';
+import {SafeAreaView, StyleSheet, View, Text, Alert, Dimensions} from 'react-native';
 import {Button, ActivityIndicator, Colors} from 'react-native-paper';
 import DataInputComponent from '../Components/DataInputComponent';
 // import areaList from '../Data/FilteredData.json';
@@ -8,11 +8,14 @@ import mainMenu from '../Data/HomepageData';
 // import {SaveToDatabase} from '../Database/databaseFunctions';
 import SQLite from 'react-native-sqlite-storage';
 import TrendModal from '../Utils/TrendModal';
+import {launchCamera} from 'react-native-image-picker';
 
 const db = SQLite.openDatabase({
   name: 'app_database.db',
   createFromLocation: 1,
 });
+
+const windowWidth = Dimensions.get('window').width;
 
 const DataInputView = ({route, navigation}) => {
   const mounted = useRef(true);
@@ -184,6 +187,30 @@ const DataInputView = ({route, navigation}) => {
     }
   };
 
+  //IMAGE PICKER LOGIC=======================================================START
+  const handlelaunchCamera = () => {
+    let options = {
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchCamera(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        console.log(response.assets.base64);
+      }
+    });
+  };
+  //IMAGE PICKER LOGIC=========================================================END
+
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -211,18 +238,26 @@ const DataInputView = ({route, navigation}) => {
               ready={ready}
               mounted={mounted}
             />
-            <Button
-              style={styles.trendButton}
-              onPress={() => showModal(dataInputData.kks)}
-              mode="contained">
-              History
-            </Button>
-            <Button
-              style={styles.nextButton}
-              onPress={dataStorage}
-              mode="contained">
-              Next
-            </Button>
+            <View style={styles.buttonView}>
+              <Button
+                style={styles.bottomButtons}
+                onPress={() => showModal(dataInputData.kks)}
+                mode="contained">
+                History
+              </Button>
+              <Button
+                style={styles.bottomButtons}
+                onPress={() => handlelaunchCamera()}
+                mode="contained">
+                IMAGE
+              </Button>
+              <Button
+                style={styles.bottomButtons}
+                onPress={dataStorage}
+                mode="contained">
+                Next
+              </Button>
+            </View>
           </Fragment>
         )}
         {!kksMatch.current && kksMatchCounter.current === 1 && (
@@ -243,16 +278,27 @@ const styles = StyleSheet.create({
   container: {
     height: '100%',
   },
-  nextButton: {
+  buttonView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
     position: 'absolute',
-    right: 10,
-    bottom: 15,
+    bottom: 5,
+    width: windowWidth,
   },
-  trendButton: {
-    position: 'absolute',
-    left: 10,
-    bottom: 15,
+  bottomButtons: {
+    width: 100,
   },
+  // nextButton: {
+  //   position: 'absolute',
+  //   right: 10,
+  //   bottom: 15,
+  // },
+  // trendButton: {
+  //   position: 'absolute',
+  //   left: 10,
+  //   bottom: 15,
+  // },
   text: {
     flex: 1,
     alignContent: 'center',

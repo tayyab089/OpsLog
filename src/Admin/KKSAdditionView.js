@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {Alert, Dimensions, ScrollView, StyleSheet, View} from 'react-native';
+import {Alert, Dimensions, SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import {Surface, Text, TextInput, Title, Button} from 'react-native-paper';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {sectionList} from '../Data/SectionListData';
@@ -43,7 +43,7 @@ const KKSAdditionView = () => {
     <View style={styles.container}>
       <Surface style={styles.surface}>
         <Title style={styles.heading}>Please Provide Following Data:</Title>
-        <ScrollView>
+        <SafeAreaView>
           <View style={styles.miniContainerInput}>
             <Text style={styles.labelText}>KKS: </Text>
             <TextInput
@@ -139,7 +139,7 @@ const KKSAdditionView = () => {
               style={styles.textInput}
             />
           </View>
-        </ScrollView>
+        </SafeAreaView>
         <Button
           mode="contained"
           style={styles.submitButton}

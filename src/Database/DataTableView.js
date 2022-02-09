@@ -29,7 +29,7 @@ const RemarksModal = ({item, visible, hideModal, deleteItem}) => {
         onDismiss={hideModal}
         contentContainerStyle={containerStyle}>
         <Text style={textStyle}><Text style={{fontWeight: 'bold'}}>KKS:            </Text>{item.kks}</Text>
-        <Text style={textStyle}><Text style={{fontWeight: 'bold'}}>DATE:          </Text>{item.date.slice(0,-5)}</Text>
+        <Text style={textStyle}><Text style={{fontWeight: 'bold'}}>DATE:          </Text>{item.date.slice(0,-15)}</Text>
         <Text style={textStyle}><Text style={{fontWeight: 'bold'}}>VALUE:       </Text> {item.value}</Text>
         <Text style={textStyle}><Text style={{fontWeight: 'bold'}}>REMARKS: </Text> {item.remarks}</Text>
         <View style={{flexDirection: 'row', justifyContent: 'flex-end', marginTop: 50}}>
@@ -99,7 +99,7 @@ const DataTableView = ({navigation}) => {
   // Filter Moal Variables End
 
   // Remarks Modal Variables Start
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
   const modalData = useRef({remarks: 'Placeholder', date: 'Placeholder', value: 'Placeholder', kks: 'Placeholder'});
   const showModal = currentItem => {
     modalData.current = currentItem;

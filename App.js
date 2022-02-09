@@ -90,7 +90,7 @@ const App = () => {
   // Use useMemo hook to save and run from memory the authentication logic and to define the context for login context
   const authContext = React.useMemo(
     () => ({
-      signIn: async data => {
+      signIn: async (data, hideLoadingModal) => {
         console.log(data);
         const options = {
           method: 'POST',
@@ -112,11 +112,13 @@ const App = () => {
                 } else {
                   console.log(response);
                   //dispatch({type: 'SIGN_IN', token: 'dummy-auth-token'});
+                  hideLoadingModal();
                   dispatch({type: 'SIGN_IN', token: response});
                 }
               });
             } else {
               Alert.alert(response.toString());
+              hideLoadingModal();
             }
           })
           .catch(err => console.log(err));

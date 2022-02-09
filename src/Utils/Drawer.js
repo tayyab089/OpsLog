@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {StyleSheet, View, Dimensions, Image} from 'react-native';
-import {Text} from 'react-native-paper';
+import {Text, withTheme} from 'react-native-paper';
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -17,7 +17,7 @@ function CustomDrawerContent(props) {
   const {userToken} = useContext(UserContext);
   return (
     <DrawerContentScrollView {...props}>
-      <View style={styles.upperHalf}>
+      <View style={{...styles.upperHalf, backgroundColor: props.theme.colors.primary}}>
         <Image
           style={styles.logo}
           source={require('../assets/Logos/OpsLog_Logo_nbc.png')}
@@ -57,4 +57,4 @@ const styles = StyleSheet.create({
     margin: 10,
   }
 });
-export default CustomDrawerContent;
+export default withTheme(CustomDrawerContent);

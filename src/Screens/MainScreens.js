@@ -5,17 +5,18 @@ import SectionListView from '../Views/SectionListView';
 import AreaListView from '../Views/AreaListView';
 import DataInputView from '../Views/DataInputView';
 import QRScanner from '../Views/QRScannerView';
-import {Button} from 'react-native-paper';
+import {Button, withTheme} from 'react-native-paper';
 import TransformRotate from '../Utils/Transitions/TransfomRotate';
 
 const Stack = createStackNavigator();
 
-const MainNavigator = () => {
+const MainNavigator = ({theme}) => {
+  const {colors} = theme;
   return (
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#18A558',
+          backgroundColor: colors.primary,
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
@@ -107,4 +108,4 @@ const MainNavigator = () => {
   );
 };
 
-export default MainNavigator;
+export default withTheme(MainNavigator);

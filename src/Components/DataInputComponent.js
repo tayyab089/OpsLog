@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Dimensions, Text, StyleSheet, View} from 'react-native';
-import {TextInput, HelperText, Checkbox} from 'react-native-paper';
+import {TextInput, HelperText, Checkbox, withTheme} from 'react-native-paper';
 
 const DataInputComponent = ({
   description,
@@ -15,6 +15,7 @@ const DataInputComponent = ({
   setRemarks,
   checked,
   setChecked,
+  theme,
 }) => {
   const [windowDimensions, setWindowDimensions] = useState({
     width: Dimensions.get('window').width,
@@ -46,13 +47,13 @@ const DataInputComponent = ({
         <HelperText type="error" visible={hasErrors()}>
           Value is abnormal, Please check to see for any problem
         </HelperText>
-        <Text style={{...styles.unitText, left: windowDimensions.width - 65}}>
+        <Text style={{...styles.unitText, color: theme.colors.primary,left: windowDimensions.width - 65}}>
           {unit}
         </Text>
       </View>
       <View style={styles.minMaxContainer}>
-        <Text style={styles.minMaxText}>Min: {min}</Text>
-        <Text style={styles.minMaxText}>Max: {max}</Text>
+        <Text style={{...styles.minMaxText, color: theme.colors.primary}}>Min: {min}</Text>
+        <Text style={{...styles.minMaxText, color: theme.colors.primary}}>Max: {max}</Text>
       </View>
       <TextInput
         style={styles.remarks}
@@ -109,4 +110,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DataInputComponent;
+export default withTheme(DataInputComponent);

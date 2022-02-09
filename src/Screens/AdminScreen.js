@@ -5,17 +5,17 @@ import UserList from '../Admin/UserListView';
 import SignUpView from '../Admin/SignUpView';
 import KKSAdditionView from '../Admin/KKSAdditionView';
 import ReportsView from '../Admin/ReportsView';
-import {Button} from 'react-native-paper';
+import {Button, withTheme} from 'react-native-paper';
 import TransformRotate from '../Utils/Transitions/TransfomRotate';
 
 const Stack = createStackNavigator();
 
-const AdminViewNavigator = () => {
+const AdminViewNavigator = ({theme}) => {
   return (
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#18A558',
+          backgroundColor: theme.colors.primary,
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
@@ -103,4 +103,4 @@ const AdminViewNavigator = () => {
   );
 };
 
-export default AdminViewNavigator;
+export default withTheme(AdminViewNavigator);

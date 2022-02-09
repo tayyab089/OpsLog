@@ -4,17 +4,17 @@ import DataMainView from '../Database/DataMainView';
 import DataTableView from '../Database/DataTableView';
 import DataTrendView from '../Database/DataTrendView';
 import DataTrendQRScanner from '../Database/DataTrendQRScanner';
-import {Button} from 'react-native-paper';
+import {Button, withTheme} from 'react-native-paper';
 import TransformRotate from '../Utils/Transitions/TransfomRotate';
 
 const Stack = createStackNavigator();
 
-const DataViewNavigator = () => {
+const DataViewNavigator = ({theme}) => {
   return (
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#18A558',
+          backgroundColor: theme.colors.primary,
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
@@ -85,4 +85,4 @@ const DataViewNavigator = () => {
   );
 };
 
-export default DataViewNavigator;
+export default withTheme(DataViewNavigator);

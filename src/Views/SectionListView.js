@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState} from 'react';
-import {FlatList, SafeAreaView, StatusBar, TouchableOpacity} from 'react-native';
+import {FlatList, SafeAreaView, TouchableOpacity} from 'react-native';
 import SectionListComponent from '../Components/SectionListComponent';
 import {sectionList} from '../Data/SectionListData';
 
@@ -22,7 +22,6 @@ const SectionListView = ({route,navigation}) => {
       );
     return (
         <SafeAreaView>
-            <StatusBar barStyle="light-content" backgroundColor="#18A558" />
             <FlatList
                 data={secData}
                 renderItem={renderItem}

@@ -15,7 +15,6 @@ const DataMainView = ({navigation}) => {
     <SafeAreaView>
       <View style={styles.container}>
         <Surface style={styles.surface}>
-          <StatusBar barStyle="light-content" backgroundColor="#18A558" />
           <TouchableOpacity
             style={styles.block}
             onPress={() => navigation.navigate('DataTable')}>

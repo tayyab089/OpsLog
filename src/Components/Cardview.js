@@ -1,15 +1,16 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import {View,Text, Image, StyleSheet} from 'react-native';
+import {withTheme} from 'react-native-paper';
 
-const CardView = ({title, src}) => {
+const CardView = ({title, src, theme}) => {
   return (
     <View style = {styles.container}>
       <Image
          style={styles.image}
         source = {src}
         />
-      <Text style={styles.title}>{title}</Text>
+      <Text style={{...styles.title, backgroundColor: theme.colors.primary}}>{title}</Text>
     </View>
   );
 };
@@ -49,4 +50,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default CardView;
+export default withTheme(CardView);

@@ -1,11 +1,11 @@
 /* eslint-disable no-shadow */
 import React, {useState, useContext} from 'react';
-import {View, StatusBar, StyleSheet, Image} from 'react-native';
-import {TextInput, Button, Switch, Text} from 'react-native-paper';
+import {View, StyleSheet, Image} from 'react-native';
+import {TextInput, Button, Switch, Text, withTheme} from 'react-native-paper';
 import AuthContext from '../Utils/LoginContext';
 import LoadingModal from '../Utils/LoadingModal';
 
-const SignUpView = ({navigation}) => {
+const SignUpView = ({navigation, theme}) => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
@@ -28,8 +28,7 @@ const SignUpView = ({navigation}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#18A558" />
+    <View style={{...styles.container, backgroundColor: theme.colors.primary}}>
       <View>
         <Image
           style={styles.image}
@@ -37,7 +36,7 @@ const SignUpView = ({navigation}) => {
         />
       </View>
       <TextInput
-        style={styles.inputs}
+        style={{...styles.inputs, backgroundColor: theme.colors.primary}}
         theme={{colors: {primary: 'white', placeholder: '#fff', text: '#fff'}}}
         mode="flat"
         label="ID"
@@ -45,7 +44,7 @@ const SignUpView = ({navigation}) => {
         value={id}
       />
       <TextInput
-        style={styles.inputs}
+        style={{...styles.inputs, backgroundColor: theme.colors.primary}}
         mode="flat"
         label="Password"
         theme={{colors: {primary: 'white', placeholder: '#fff', text: '#fff'}}}
@@ -60,7 +59,7 @@ const SignUpView = ({navigation}) => {
       <LoadingModal visible={loadingVisible} hideModal={hideLoadingModal} />
       <Button
         style={styles.loginButton}
-        labelStyle={styles.loginButtonContent}
+        labelStyle={{...styles.loginButtonContent, color: theme.colors.primary}}
         dark={false}
         mode="contained"
         onPress={() => handleSignUp({id, password, isAdmin})}>
@@ -115,4 +114,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUpView;
+export default withTheme(SignUpView);
